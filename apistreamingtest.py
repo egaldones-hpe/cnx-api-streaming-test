@@ -1,5 +1,4 @@
-from oauthlib.oauth2 import BackendApplicationClient
-from requests_oauthlib import OAuth2Session
+from apitokenfetcher import ApiTokenFetcher
 import argparse
 import os
 import sys
@@ -66,18 +65,15 @@ def main():
     """Main function to run the API streaming client."""
     config = parse_arguments()
 
-    # Create OAuth2 client and get token
-    client = BackendApplicationClient(config['client_id'])
-    oauth = OAuth2Session(client=client)
-
+    # Fetch API token using the new class
+    token_fetcher = ApiTokenFetcher(
+        config['client_id'],
+        config['client_secret'],
+        config['token_url']
+    )
     try:
-        fetch = oauth.fetch_token(
-            token_url=config['token_url'],
-            client_id=config['client_id'],
-            client_secret=config['client_secret']
-        )
-        token = fetch["access_token"]
-        print("Successfully obtained access token")
+        token = token_fetcher.fetch_token()
+        print(f"Successfully obtained access token\n{token}")
 
         # Create API streaming client
         streaming_client = ApiStreamingClient(config['websocket_url'], token)
