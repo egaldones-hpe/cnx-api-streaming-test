@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "apistreamingclient"
+version = "0.1.0"
+description = "A Python client for API streaming."
+authors = ["Your Name <your.email@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+websocket-client = "*"
+requests-oauthlib = "*"
+oauthlib = "*"
+protobuf = "^5.29.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
