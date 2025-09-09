@@ -100,9 +100,11 @@ client.create_ws_connection_with_client_decoding(access_token, endpoint)
 ```
 ├── apistreamingclient.py     # Main streaming client class
 ├── apistreamingtest.py       # CLI application and example usage
-├── event_pb2.py             # Generated Protocol Buffer classes for events
-├── location_pb2.py          # Generated Protocol Buffer classes for locations
-├── wids_pb2.py              # Generated Protocol Buffer classes for WIDS events
+├── protobuf/                 # Protocol Buffer generated files
+│   ├── __init__.py          # Package initialization
+│   ├── event_pb2.py         # Generated Protocol Buffer classes for events
+│   ├── location_pb2.py      # Generated Protocol Buffer classes for locations
+│   └── wids_pb2.py          # Generated Protocol Buffer classes for WIDS events
 ├── pyproject.toml           # Poetry configuration and dependencies
 └── README.md                # This file
 ```
@@ -156,7 +158,7 @@ poetry shell
 
 ### Protocol Buffer Files
 
-The Protocol Buffer files (`*_pb2.py`) are generated from `.proto` definitions. If you need to regenerate them:
+The Protocol Buffer files (`*_pb2.py`) are located in the `protobuf/` directory and are generated from `.proto` definitions. If you need to regenerate them:
 
 ```bash
 # Install protoc compiler
@@ -164,7 +166,7 @@ The Protocol Buffer files (`*_pb2.py`) are generated from `.proto` definitions. 
 # On Ubuntu: apt-get install protobuf-compiler
 
 # Generate Python classes (example)
-protoc --python_out=. event.proto location.proto wids.proto
+protoc --python_out=protobuf/ event.proto location.proto wids.proto
 ```
 
 ## License

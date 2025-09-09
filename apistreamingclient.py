@@ -4,9 +4,9 @@ import websocket
 from websocket._exceptions import WebSocketBadStatusException
 
 # Load the Protobuf message definition
-import event_pb2
-import location_pb2
-import wids_pb2
+from protobuf import event_pb2
+from protobuf import location_pb2
+from protobuf import wids_pb2
 
 event_type_decoders = {
     "com.hpe.greenlake.network-services.v1alpha1.wids-rules": wids_pb2.WidsRulesEvent,
