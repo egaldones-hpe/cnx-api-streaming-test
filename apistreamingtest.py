@@ -73,7 +73,7 @@ def main():
     )
     try:
         token = token_fetcher.fetch_token()
-        print(f"Successfully obtained access token\n{token}")
+        print(f"Successfully obtained access token")
 
         # Create API streaming client
         streaming_client = ApiStreamingClient(config['websocket_url'], token)
