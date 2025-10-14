@@ -1,6 +1,8 @@
+from typing import Type
 from websocket import create_connection
 import ssl
 import websocket
+from typing import TypedDict
 from websocket._exceptions import WebSocketBadStatusException
 
 # Load the Protobuf message definition
@@ -8,10 +10,14 @@ from protobuf import event_pb2
 from protobuf import location_pb2
 from protobuf import wids_pb2
 
-event_type_decoders = {
-    "com.hpe.greenlake.network-services.v1alpha1.wids-rules": wids_pb2.WidsRulesEvent,
-    "com.hpe.greenlake.network-services.v1alpha1.wids-signatures": wids_pb2.WidsSignaturesEvent,
-    "com.hpe.greenlake.network-services.v1alpha1.wifi-client-locations.created": location_pb2.WifiClientLocation,
+class EventTypeDecoder(TypedDict):
+    top_level_decoder: Type
+    sub_msg_field: str
+
+event_type_decoders: dict[str, EventTypeDecoder] = {
+    "com.hpe.greenlake.network-services.v1alpha1.wids-rules.detection.created": {"top_level_decoder": wids_pb2.WidsStreamMessage, "sub_msg_field": "widsRulesEvent"},
+    "com.hpe.greenlake.network-services.v1alpha1.wids-signatures.detection.created": {"top_level_decoder": wids_pb2.WidsStreamMessage, "sub_msg_field": "widsSignaturesEvent"},
+    "com.hpe.greenlake.network-services.v1alpha1.wifi-client-locations.created": {"top_level_decoder": location_pb2.StreamLocationMessage, "sub_msg_field": "wifi_client_location"},
 }
 
 class ApiStreamingClient:
@@ -24,13 +30,22 @@ class ApiStreamingClient:
         print(f"Event type: {event.type}")
         subject_customer_id = event.attributes['subject'].ce_string
         print(event)
-        decoder = event_type_decoders.get(event.type)
-        if decoder is None:
+        decoder_info = event_type_decoders.get(event.type)
+        if decoder_info is None:
             decoded_event = f"Unhandled event type: {event.type} via {proto}"
         else:
-            decoded_event = decoder()
-            decoded_event.ParseFromString(event.proto_data.value)
-        print(f"Decoded Event:\n{decoded_event}")
+            message_class = decoder_info["top_level_decoder"]
+            try:
+                top_level_message = message_class()
+                top_level_message.ParseFromString(event.proto_data.value)
+                decoded_event = getattr(top_level_message, decoder_info["sub_msg_field"])
+            except Exception as e:
+                print(f"Error decoding event: {e}")
+                decoded_event = f"Error decoding event: {e}"
+
+        print("Decoded Event:")
+        print("==============")
+        print(decoded_event)
 
     def create_ws_connection(self, access_token, end_point, header_param=None):
         if header_param is None:
