@@ -18,6 +18,7 @@ event_type_decoders: dict[str, EventTypeDecoder] = {
     "com.hpe.greenlake.network-services.v1alpha1.wids-rules.detection.created": {"top_level_decoder": wids_pb2.WidsStreamMessage, "sub_msg_field": "widsRulesEvent"},
     "com.hpe.greenlake.network-services.v1alpha1.wids-signatures.detection.created": {"top_level_decoder": wids_pb2.WidsStreamMessage, "sub_msg_field": "widsSignaturesEvent"},
     "com.hpe.greenlake.network-services.v1alpha1.wifi-client-locations.created": {"top_level_decoder": location_pb2.StreamLocationMessage, "sub_msg_field": "wifi_client_location"},
+    "com.hpe.greenlake.network-services.v1alpha1.asset-tags.last-known-location.created": {"top_level_decoder": location_pb2.StreamLocationMessage, "sub_msg_field": "asset_tag_location"},
 }
 
 class ApiStreamingClient:
