@@ -15,6 +15,7 @@ A Python client for streaming API events from HPE GreenLake Network Services. Th
 - `com.hpe.greenlake.network-services.v1alpha1.wids-rules`
 - `com.hpe.greenlake.network-services.v1alpha1.wids-signatures` 
 - `com.hpe.greenlake.network-services.v1alpha1.wifi-client-locations.created`
+- `com.hpe.greenlake.network-services.v1alpha1.asset-tags.last-known-location.created`
 
 ## Requirements
 
